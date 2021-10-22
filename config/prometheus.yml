@@ -1,0 +1,30 @@
+# my global config
+global:
+  scrape_interval:     5s # By default, scrape targets every 15 seconds.
+  evaluation_interval: 5s # By default, scrape targets every 15 seconds.
+  # scrape_timeout is set to the global default (10s).
+
+  # Attach these labels to any time series or alerts when communicating with
+  # external systems (federation, remote storage, Alertmanager).
+  external_labels:
+      monitor: 'my-project'
+
+alerting:
+  alertmanagers:
+  - static_configs:
+    - targets:
+
+# Load and evaluate rules in this file every 'evaluation_interval' seconds.
+rule_files:
+  # - "first.rules"
+  # - "second.rules"
+
+# A scrape configuration containing exactly one endpoint to scrape:
+# Here it's Prometheus itself.
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+    - targets: ['localhost:9090']
+  - job_name: 'rabbitmq-server'
+    static_configs:
+      - targets: ['dev-one-erp.kokonetworks.com:15692', 'dev-three-erp.kokonetworks.com:15692','rabbitmq-server:15692']

@@ -1,0 +1,38 @@
+version: '3.1'
+
+services:
+  prometheus:
+    image: prom/prometheus
+    user: root
+    volumes:
+      - ./config:/prometheus
+      - ./data/prometheus:/data
+    command:
+      - '--config.file=/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/data'
+    ports:
+      - 9090:9090
+    restart: always
+    networks:
+      - promnet
+  rabbitmq-server:
+    image: rabbitmq:3.8-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+      - "15692:15692"
+    networks:
+      - "promnet"
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000" 
+    volumes:
+#      - ./grafana/grafana.ini:/etc/grafana/grafana.ini
+      - ./grafana:/var/lib/grafana
+    networks:
+      - "promnet"
+networks:
+  promnet:
+    driver: overlay
